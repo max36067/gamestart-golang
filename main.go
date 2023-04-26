@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "apigee-portal/v2/repository"
 	"apigee-portal/v2/routers"
 
 	"github.com/gin-gonic/gin"

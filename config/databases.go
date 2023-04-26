@@ -14,10 +14,12 @@ type DataBaseConfig struct {
 	Database     string
 }
 
-func (dbc *DataBaseConfig) InitConfig() {
-	dbc.UserName = os.Getenv("DB_USERNAME")
-	dbc.UserPassword = os.Getenv("DB_PASSWORD")
-	dbc.Host = os.Getenv("DB_HOST")
-	dbc.Port = os.Getenv("DB_PORT")
-	dbc.Database = os.Getenv("DB_DATABASE")
+func InitConfig() *DataBaseConfig {
+	return &DataBaseConfig{
+		UserName:     os.Getenv("DB_USERNAME"),
+		UserPassword: os.Getenv("DB_PASSWORD"),
+		Host:         os.Getenv("DB_HOST"),
+		Port:         os.Getenv("DB_PORT"),
+		Database:     os.Getenv("DB_DATABASE"),
+	}
 }
