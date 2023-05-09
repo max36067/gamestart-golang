@@ -1,4 +1,4 @@
-package models
+package domain
 
 type User struct {
 	ID          int    `json:"id"`
@@ -9,16 +9,14 @@ type User struct {
 	IsSuperUser bool   `json:"is_super_user"`
 }
 
-type SignUpInput struct {
-	Name            string `json:"name" binding:"required"`
-	Email           string `json:"email" binding:"required"`
-	Password        string `json:"password" binding:"required"`
-	PasswordConfirm string `json:"passwordConfirm" binding:"required"`
+type Salt struct {
+	ID    int
+	Email string
+	Salt  string
 }
 
-type SignInInput struct {
-	Email    string `json:"email"  binding:"required"`
-	Password string `json:"password"  binding:"required"`
+type UserRequest struct {
+	Email string `json:"email" binding:"required"`
 }
 
 type UserResponse struct {
@@ -33,4 +31,15 @@ func (User) TableName() string {
 
 func (UserResponse) TableName() string {
 	return "user"
+}
+
+func (Salt) TableName() string {
+	return "salt"
+}
+
+type UserRepository interface {
+	Create(user *User) error
+	Fetch() ([]UserResponse, error)
+	GetByEmail(email string) (UserResponse, error)
+	GetByID(id string) (UserResponse, error)
 }
