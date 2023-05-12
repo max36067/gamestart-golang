@@ -1,15 +1,16 @@
 package bootstrap
 
 import (
-	"apigee-portal/v2/postgres"
+	"fmt"
 	"log"
 
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 type Application struct {
-	Env        *Env
-	Postgresql postgres.DataBase
+	Env      *Env
+	Database *gorm.DB
 }
 
 func NewApp() *Application {
@@ -20,7 +21,11 @@ func NewApp() *Application {
 
 	app := &Application{}
 	app.Env = NewEnv()
-	app.Postgresql = NewPostgresDatabase(app.Env)
+	app.Database, err = NewPostgresDatabase(app.Env)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Database connection established.")
 
 	return app
 }

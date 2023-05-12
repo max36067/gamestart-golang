@@ -1,15 +1,21 @@
 package router
 
 import (
+	"apigee-portal/v2/api/middleware"
 	"apigee-portal/v2/bootstrap"
-	"apigee-portal/v2/postgres"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func Setup(env *bootstrap.Env, db postgres.DataBase, gin *gin.Engine) {
-	// publicRouter := gin.Group("")
+func Setup(env *bootstrap.Env, timeout time.Duration, db *gorm.DB, gin *gin.Engine) {
+	apiV1Router := gin.Group("/api/v1")
+	publicRouter := apiV1Router.Group("")
+	NewLoginRoute(db, timeout, env, publicRouter)
 
-	protectedRouter := gin.Group("/api/v1")
+	protectedRouter := apiV1Router.Group("")
+	protectedRouter.Use(middleware.JWTAuthMiddleware(env.SecretKey))
 	NewUserRouter(db, env, protectedRouter)
+	NewRefreshTokenRoute(db, timeout, env, protectedRouter)
 }

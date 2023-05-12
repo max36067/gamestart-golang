@@ -2,14 +2,15 @@ package repository
 
 import (
 	"apigee-portal/v2/domain"
-	"apigee-portal/v2/postgres"
+
+	"gorm.io/gorm"
 )
 
 type userRepository struct {
-	database postgres.DataBase
+	database *gorm.DB
 }
 
-func NewUserRepository(db postgres.DataBase) domain.UserRepository {
+func NewUserRepository(db *gorm.DB) domain.UserRepository {
 	return &userRepository{
 		database: db,
 	}
@@ -28,14 +29,18 @@ func (ur *userRepository) Fetch() ([]domain.UserResponse, error) {
 	return users, nil
 }
 
-func (ur *userRepository) GetByEmail(email string) (domain.UserResponse, error) {
-	var user domain.UserResponse
-	err := ur.database.Select(&user).Where("email = ?", email).Error
-	return user, err
+func (ur *userRepository) GetByEmail(email string) (domain.User, error) {
+	var user domain.User
+	if err := ur.database.First(&user, "email = ?", email).Error; err != nil {
+		return user, err
+	}
+	return user, nil
 }
 
-func (ur *userRepository) GetByID(id string) (domain.UserResponse, error) {
-	var user domain.UserResponse
-	err := ur.database.Select(&user).Where("id = ?", id).Error
-	return user, err
+func (ur *userRepository) GetByID(id int) (domain.User, error) {
+	var user domain.User
+	if err := ur.database.First(&user, "id = ?", id).Error; err != nil {
+		return user, err
+	}
+	return user, nil
 }

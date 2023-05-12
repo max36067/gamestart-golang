@@ -1,11 +1,13 @@
 package bootstrap
 
 import (
-	"apigee-portal/v2/postgres"
 	"fmt"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-func NewPostgresDatabase(env *Env) postgres.DataBase {
+func NewPostgresDatabase(env *Env) (*gorm.DB, error) {
 
 	username := env.DBUser
 	password := env.DBPassword
@@ -14,7 +16,6 @@ func NewPostgresDatabase(env *Env) postgres.DataBase {
 	dbname := env.DBName
 
 	uri := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, username, password, dbname, port)
-	db := postgres.NewDatabase(uri)
-
-	return db
+	db, err := gorm.Open(postgres.Open(uri), &gorm.Config{})
+	return db, err
 }
