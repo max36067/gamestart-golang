@@ -9,11 +9,11 @@ import (
 
 func NewPostgresDatabase(env *Env) (*gorm.DB, error) {
 
-	username := env.DBUser
-	password := env.DBPassword
-	host := env.DBHost
-	port := env.DBPort
-	dbname := env.DBName
+	username := env.Database.User
+	password := env.Database.Password
+	host := env.Database.Host
+	port := env.Database.Port
+	dbname := env.Database.Name
 
 	uri := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable", host, username, password, dbname, port)
 	db, err := gorm.Open(postgres.Open(uri), &gorm.Config{})

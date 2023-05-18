@@ -13,7 +13,7 @@ func main() {
 	env := app.Env
 
 	server := gin.New()
-	timeout := time.Duration(time.Second * time.Duration(env.SystemTimeout))
+	timeout := time.Duration(time.Second * time.Duration(env.Server.SystemTimeout))
 
 	router.Setup(env, timeout, app.Database, server)
 

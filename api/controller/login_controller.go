@@ -40,13 +40,13 @@ func (lc LoginController) Login(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := lc.LoginUsecase.CreateAccessToken(&user, lc.Env.SecretKey, lc.Env.ExpiredMinutes)
+	accessToken, err := lc.LoginUsecase.CreateAccessToken(&user, lc.Env.Server.SecretKey, lc.Env.Server.ExpiredMinutes)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return
 	}
 
-	refreshToken, err := lc.LoginUsecase.CreateRefreshToken(&user, lc.Env.SecretKey, lc.Env.ExpiredMinutes)
+	refreshToken, err := lc.LoginUsecase.CreateRefreshToken(&user, lc.Env.Server.SecretKey, lc.Env.Server.ExpiredMinutes)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return

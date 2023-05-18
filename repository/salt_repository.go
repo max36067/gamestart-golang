@@ -22,3 +22,7 @@ func (sr *saltRepository) GetSaltByEmail(email string) (saltString string, err e
 
 	return salt.Salt, err
 }
+
+func (sr *saltRepository) Create(salt *domain.Salt) error {
+	return sr.database.Create(salt).Error
+}

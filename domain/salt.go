@@ -11,5 +11,6 @@ func (Salt) TableName() string {
 }
 
 type SaltRepository interface {
+	Create(salt *Salt) error
 	GetSaltByEmail(email string) (salt string, err error)
 }

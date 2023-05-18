@@ -2,42 +2,42 @@ package bootstrap
 
 import (
 	"log"
-	"os"
-	"strconv"
+
+	"github.com/spf13/viper"
 )
 
 type Env struct {
-	DBUser         string
-	DBPassword     string
-	DBHost         string
-	DBPort         string
-	DBName         string
-	SecretKey      string
-	Algorithm      string
-	ExpiredMinutes int
-	SystemTimeout  int
+	Database struct {
+		User     string `mapstructure:"DB_USER"`
+		Password string `mapstructure:"DB_PASSWORD"`
+		Host     string `mapstructure:"DB_HOST"`
+		Port     string `mapstructure:"DB_PORT"`
+		Name     string `mapstructure:"DB_NAME"`
+	}
+	Server struct {
+		SecretKey      string `mapstructure:"SECRET_KEY"`
+		ExpiredMinutes int    `mapstructure:"ACCESS_TOKEN_EXPIRE_MINUTES"`
+		SystemTimeout  int    `mapstructure:"SYSTEM_TIMEOUT_SECOND"`
+	}
+	Binance struct {
+		API       string `mapstructure:"BINANCE_API_DOMAIN"`
+		AccessKey string `mapstructure:"BINANCE_ACCESS_KEY"`
+		SecretKey string `mapstructure:"BINANCE_SECRET_KEY"`
+	}
 }
 
 func NewEnv() *Env {
-	expire, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+	env := Env{}
+	viper.SetConfigFile(".env")
+
+	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatalf("Unable to read `ACCESS_TOKEN_EXPIRE_MINUTES` from env file.")
+		log.Fatal("Can not read file .env : ", err)
+	}
+	err = viper.Unmarshal(&env)
+	if err != nil {
+		log.Fatal("Enviroment can not be loaded : ", err)
 	}
 
-	timeout, err := strconv.Atoi(os.Getenv("SYSTEM_TIMEOUT_SECOND"))
-	if err != nil {
-		log.Fatalf("Unable to read `SYSTEM_TIMEOUT_SECOND` from env file.")
-	}
-
-	return &Env{
-		DBUser:         os.Getenv("DB_USER"),
-		DBPassword:     os.Getenv("DB_PASSWORD"),
-		DBHost:         os.Getenv("DB_HOST"),
-		DBPort:         os.Getenv("DB_PORT"),
-		DBName:         os.Getenv("DB_NAME"),
-		SecretKey:      os.Getenv("SECRET_KEY"),
-		Algorithm:      os.Getenv("ALGORITHM"),
-		ExpiredMinutes: expire,
-		SystemTimeout:  timeout,
-	}
+	return &env
 }
