@@ -19,6 +19,15 @@ type UserResponse struct {
 	Email string `json:"email,omitempty"`
 }
 
+type GoogleUser struct {
+	ID         string `json:"id,omitempty"`
+	Name       string `json:"name,omitempty"`
+	GivenName  string `json:"given_name,omitempty"`
+	FamilyName string `json:"family_name,omitempty"`
+	Picture    string `json:"picture,omitempty"`
+	Locale     string `json:"locale,omitempty"`
+}
+
 func (User) TableName() string {
 	return "user"
 }

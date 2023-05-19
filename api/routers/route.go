@@ -16,7 +16,7 @@ func Setup(env *bootstrap.Env, timeout time.Duration, db *gorm.DB, gin *gin.Engi
 	NewSignupRouter(db, timeout, env, publicRouter)
 
 	protectedRouter := apiV1Router.Group("")
-	protectedRouter.Use(middleware.JWTAuthMiddleware(env.Server.SecretKey))
+	protectedRouter.Use(middleware.JWTAuthMiddleware(env.SecretKey))
 	NewUserRouter(db, env, protectedRouter)
 	NewRefreshTokenRoute(db, timeout, env, protectedRouter)
 }

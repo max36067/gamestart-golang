@@ -62,13 +62,13 @@ func (sc *SignupController) Register(c *gin.Context) {
 		return
 	}
 
-	accessToken, err := sc.SignupUsecase.CreateAccessToken(&user, sc.Env.Server.SecretKey, sc.Env.Server.ExpiredMinutes)
+	accessToken, err := sc.SignupUsecase.CreateAccessToken(&user, sc.Env.SecretKey, sc.Env.ExpiredMinutes)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return
 	}
 
-	refreshToken, err := sc.SignupUsecase.CreateRefreshToken(&user, sc.Env.Server.SecretKey, sc.Env.Server.ExpiredMinutes)
+	refreshToken, err := sc.SignupUsecase.CreateRefreshToken(&user, sc.Env.SecretKey, sc.Env.ExpiredMinutes)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
 		return
