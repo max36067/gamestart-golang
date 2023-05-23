@@ -8,6 +8,10 @@ type GoogleOauthTokenResponse struct {
 	TokenType   string `json:"token_type,omitempty"`
 }
 
+type GoogleOauthUrlResponse struct {
+	GoogleOauthUrl string `json:"google_oauth_url"`
+}
+
 type GoogleOauthUsecase interface {
 	RequestAccessToken(code string) (GoogleOauthTokenResponse, error)
 	GetUserInfo(googleOauthTokenResponse *GoogleOauthTokenResponse) (GoogleUser, error)
