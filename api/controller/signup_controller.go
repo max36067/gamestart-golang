@@ -14,6 +14,14 @@ type SignupController struct {
 	Env           *bootstrap.Env
 }
 
+// @Summary User Signup
+// @Description User Signup
+// @Tags Signup
+// @Accept json
+// @Produce json
+// @Param user_info body domain.SignupRequest false "userInfo"
+// @Success 200 {object} domain.SignupResponse
+// @Router /signup [post]
 func (sc *SignupController) Register(c *gin.Context) {
 	var request domain.SignupRequest
 	if err := c.ShouldBindJSON(&request); err != nil {

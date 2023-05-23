@@ -17,7 +17,15 @@ type LoginController struct {
 	Env                *bootstrap.Env
 }
 
-func (lc LoginController) ServerLogin(c *gin.Context) {
+// @Summary User Login
+// @Description Default user login
+// @Tags Login
+// @Accept json
+// @Produce json
+// @Param user body domain.LoginRequest false "user email and password"
+// @Success 200 {object} domain.LoginResponse
+// @Router /login [post]
+func (lc *LoginController) ServerLogin(c *gin.Context) {
 	var request domain.LoginRequest
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -63,6 +71,13 @@ func (lc LoginController) ServerLogin(c *gin.Context) {
 	c.JSON(http.StatusOK, loginResponse)
 }
 
+// @Summary Google Oauth Login
+// @Description Get google oauth url
+// @Tags Login
+// @Accept json
+// @Produce json
+// @Success 301
+// @Router /oauth/google/url [get]
 func (lc *LoginController) GoogleOauth(c *gin.Context) {
 	redirectUri := "http://localhost:8080/api/v1/oauth/google/login"
 	queryParams := url.Values{}
@@ -72,9 +87,16 @@ func (lc *LoginController) GoogleOauth(c *gin.Context) {
 	queryParams.Set("redirect_uri", redirectUri)
 	queryParams.Set("access_type", "offline")
 	oauthUrl := fmt.Sprintf("%s?%s", lc.Env.GoogleOauthAuthUri, queryParams.Encode())
-	c.JSON(http.StatusOK, gin.H{"google_oauth_url": oauthUrl})
+	c.Redirect(http.StatusMovedPermanently, oauthUrl)
 }
 
+// @Summary Google Oauth Login
+// @Description Google oauth login
+// @Tags Login
+// @Accept json
+// @Produce json
+// @Success 200 {object} domain.LoginResponse
+// @Router /oauth/google/login [get]
 func (lc *LoginController) GoogleOauthLogin(c *gin.Context) {
 	code := c.Query("code")
 	token, err := lc.GoogleOauthUsecase.RequestAccessToken(code)
