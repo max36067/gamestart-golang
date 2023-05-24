@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+
+  # db:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_PASSWORD: example
+  #   ports:
+  #     - 5432:5432
+
+  # redis:
+  #   image: bitnami/redis:latest
+  #   restart: always
+  #   environment:
+  #     - REDIS_PASSWORD=example
+  #   ports: 
+  #     - 6379:6379
+
+  app:
+    build: .
+    ports:
+      - 8080:8080
+    depends_on:
+     - db
+     - redis
