@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
@@ -13,6 +15,16 @@ func HashPassword(password string) (string, error) {
 	}
 
 	return string(hashedPassword), nil
+}
+
+func GenerateSalt() (string, error) {
+	bytes := make([]byte, 16)
+	if _, err := rand.Read(bytes); err != nil {
+		return "", err
+	}
+
+	return hex.EncodeToString(bytes), nil
+
 }
 
 func VerifyPassword(hashedPassword, candidatePassword string) error {

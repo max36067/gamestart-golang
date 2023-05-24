@@ -1,0 +1,185 @@
+definitions:
+  domain.LoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    type: object
+  domain.LoginResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  domain.RefreshTokenRequest:
+    properties:
+      refresh_token:
+        type: string
+    required:
+    - refresh_token
+    type: object
+  domain.RefreshTokenResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  domain.SignupRequest:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
+  domain.SignupResponse:
+    properties:
+      access_token:
+        type: string
+      refresh_token:
+        type: string
+    type: object
+  domain.UserList:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/domain.UserResponse'
+        type: array
+    type: object
+  domain.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: Max.Huang
+  description: Gin swagger
+  title: Gin swagger
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Default user login
+      parameters:
+      - description: user email and password
+        in: body
+        name: user
+        schema:
+          $ref: '#/definitions/domain.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.LoginResponse'
+      summary: User Login
+      tags:
+      - Login
+  /oauth/google/login:
+    get:
+      consumes:
+      - application/json
+      description: Google oauth login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.LoginResponse'
+      summary: Google Oauth Login
+      tags:
+      - Login
+  /oauth/google/url:
+    get:
+      consumes:
+      - application/json
+      description: Get google oauth url
+      produces:
+      - application/json
+      responses:
+        "301":
+          description: Moved Permanently
+      summary: Google Oauth Login
+      tags:
+      - Login
+  /refresh:
+    post:
+      consumes:
+      - application/json
+      description: Refresh access token
+      parameters:
+      - description: refresh token
+        in: body
+        name: user_info
+        schema:
+          $ref: '#/definitions/domain.RefreshTokenRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.RefreshTokenResponse'
+      summary: Refresh Token
+      tags:
+      - Login
+  /signup:
+    post:
+      consumes:
+      - application/json
+      description: User Signup
+      parameters:
+      - description: userInfo
+        in: body
+        name: user_info
+        schema:
+          $ref: '#/definitions/domain.SignupRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.SignupResponse'
+      summary: User Signup
+      tags:
+      - Signup
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: User List
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.UserList'
+      security:
+      - BearerAuth: []
+      summary: User List
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
