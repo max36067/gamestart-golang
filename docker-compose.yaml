@@ -2,13 +2,17 @@ version: '3.1'
 
 services:
 
-  # db:
-  #   image: postgres
-  #   restart: always
-  #   environment:
-  #     POSTGRES_PASSWORD: example
-  #   ports:
-  #     - 5432:5432
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: my_database
+    volumes:
+        - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - 5432:5432
 
   # redis:
   #   image: bitnami/redis:latest
@@ -24,4 +28,3 @@ services:
       - 8080:8080
     depends_on:
      - db
-     - redis
