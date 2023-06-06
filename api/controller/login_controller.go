@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -50,7 +51,7 @@ func (lc *LoginController) ServerLogin(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Invalid credentials."})
 		return
 	}
-
+	expires := time.Now().Add(time.Minute * time.Duration(lc.Env.ExpiredMinutes))
 	accessToken, err := lc.LoginUsecase.CreateAccessToken(&user, lc.Env.SecretKey, lc.Env.ExpiredMinutes)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": err.Error()})
@@ -67,6 +68,16 @@ func (lc *LoginController) ServerLogin(c *gin.Context) {
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}
+
+	refreshTokenCookie := http.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		Expires:  expires,
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
+	}
+	http.SetCookie(c.Writer, &refreshTokenCookie)
 
 	c.JSON(http.StatusOK, loginResponse)
 }

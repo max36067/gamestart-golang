@@ -3,7 +3,6 @@ package usecase
 import (
 	"apigee-portal/v2/domain"
 	"apigee-portal/v2/utils"
-	"context"
 	"time"
 )
 
@@ -19,9 +18,7 @@ func NewRefreshTokenUsecase(userRepository domain.UserRepository, timeout time.D
 	}
 }
 
-func (rtu *refreshTokenUsecase) GetUserByID(c context.Context, id int) (domain.User, error) {
-	_, cancel := context.WithTimeout(c, rtu.timeout)
-	defer cancel()
+func (rtu *refreshTokenUsecase) GetUserByID(id int) (domain.User, error) {
 	return rtu.userRepository.GetByID(id)
 }
 

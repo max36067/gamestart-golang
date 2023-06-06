@@ -14,13 +14,13 @@ services:
     ports:
       - 5432:5432
 
-  # redis:
-  #   image: bitnami/redis:latest
-  #   restart: always
-  #   environment:
-  #     - REDIS_PASSWORD=example
-  #   ports: 
-  #     - 6379:6379
+  redis:
+    image: bitnami/redis:latest
+    restart: always
+    environment:
+      - REDIS_PASSWORD=example
+    ports: 
+      - 6379:6379
 
   app:
     build: .
@@ -28,3 +28,4 @@ services:
       - 8080:8080
     depends_on:
      - db
+     - redis

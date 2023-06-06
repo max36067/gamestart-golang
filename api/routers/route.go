@@ -6,17 +6,17 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func Setup(env *bootstrap.Env, timeout time.Duration, db *gorm.DB, gin *gin.Engine) {
+func Setup(env *bootstrap.Env, timeout time.Duration, databases *bootstrap.Databases, gin *gin.Engine) {
 	apiV1Router := gin.Group("/api/v1")
 	publicRouter := apiV1Router.Group("")
-	NewLoginRoute(db, timeout, env, publicRouter)
-	NewSignupRouter(db, timeout, env, publicRouter)
+	NewLoginRoute(databases.DB, timeout, env, publicRouter)
+	NewSignupRouter(databases.DB, timeout, env, publicRouter)
 
 	protectedRouter := apiV1Router.Group("")
-	protectedRouter.Use(middleware.JWTAuthMiddleware(env.SecretKey))
-	NewUserRouter(db, env, protectedRouter)
-	NewRefreshTokenRoute(db, timeout, env, protectedRouter)
+	protectedRouter.Use(middleware.JWTAuthMiddleware(databases.RDB, env.SecretKey))
+	NewUserRouter(databases.DB, env, protectedRouter)
+	NewRefreshTokenRoute(databases.DB, timeout, env, protectedRouter)
+	NewLogoutRoute(databases, timeout, env, protectedRouter)
 }

@@ -56,6 +56,18 @@ func ExtractIDFromToken(requestToken string, secret string) (int, error) {
 	}
 }
 
+func ExtractExpFromToken(requestToken string, secret string) (int64, error) {
+	token, err := jwt.ParseWithClaims(requestToken, &domain.JWTCustomClaims{}, func(t *jwt.Token) (interface{}, error) {
+		return []byte(secret), nil
+	})
+
+	if claim, ok := token.Claims.(*domain.JWTCustomClaims); ok && token.Valid {
+		return claim.ExpiresAt.Unix(), nil
+	} else {
+		return 0, err
+	}
+}
+
 func IsAuthorized(requestToken string, secret string) (bool, error) {
 	_, err := jwt.Parse(requestToken, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {

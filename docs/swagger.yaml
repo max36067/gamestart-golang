@@ -90,6 +90,25 @@ paths:
       summary: User Login
       tags:
       - Login
+  /logout:
+    get:
+      consumes:
+      - application/json
+      description: Default user login
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      security:
+      - BearerAuth: []
+      summary: User Logout
+      tags:
+      - Logout
   /oauth/google/login:
     get:
       consumes:
