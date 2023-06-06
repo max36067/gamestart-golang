@@ -6,13 +6,12 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/joho/godotenv"
-	"gorm.io/gorm"
 )
 
 type Application struct {
-	Env      *Env
-	Database *gorm.DB
-	Cors     cors.Config
+	Env       *Env
+	Databases *Databases
+	Cors      cors.Config
 }
 
 func NewApp() *Application {
@@ -23,7 +22,9 @@ func NewApp() *Application {
 
 	app := &Application{}
 	app.Env = NewEnv()
-	app.Database, err = NewPostgresDatabase(app.Env)
+
+	app.Databases = NewDatabases(app.Env)
+
 	app.Cors = NewCorsConfig(app.Env)
 	if err != nil {
 		log.Fatal(err)

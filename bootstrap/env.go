@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/spf13/viper"
@@ -13,6 +12,12 @@ type Env struct {
 	DB_Host     string `mapstructure:"DB_HOST"`
 	DB_Port     string `mapstructure:"DB_PORT"`
 	DB_Name     string `mapstructure:"DB_NAME"`
+
+	Redis_Host     string `mapstructure:"REDIS_HOST"`
+	Redis_Port     string `mapstructure:"REDIS_Port"`
+	Redis_DB       int    `mapstructure:"REDIS_DB"`
+	Redis_Password string `mapstructure:"REDIS_PASSWORD"`
+	Redis_PoolSize int    `mapstructure:"REDIS_POOLSIZE"`
 
 	SecretKey      string `mapstructure:"SECRET_KEY"`
 	ExpiredMinutes int    `mapstructure:"ACCESS_TOKEN_EXPIRE_MINUTES"`
@@ -43,7 +48,6 @@ func NewEnv() *Env {
 	if err != nil {
 		log.Fatal("Enviroment can not be loaded : ", err)
 	}
-	fmt.Println(env.GoogleOauthAuthUri)
 
 	return &env
 }

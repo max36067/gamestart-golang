@@ -38,7 +38,7 @@ func main() {
 	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 
 	// default server setup
-	router.Setup(env, timeout, app.Database, server)
+	router.Setup(env, timeout, app.Databases, server)
 	server.GET("/home", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"message": "Hollow World"})
 	})
